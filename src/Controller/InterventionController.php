@@ -7,6 +7,7 @@ use Dompdf\Options;
 use App\Util\AtediHelper;
 use App\Entity\BillingLine;
 use App\Entity\Intervention;
+use App\Util\DolibarrHelper;
 use App\Form\BillingLineType;
 use App\Form\InterventionType;
 use App\Entity\InterventionReport;
@@ -94,7 +95,7 @@ class InterventionController extends AbstractController
     }
 
     #[Route("/{id}", name: "intervention_show", methods: ["GET","POST"])]
-    public function show(Request $request, Intervention $intervention, EntityManagerInterface $em, SoftwareRepository $sr, ActionRepository $ar, SoftwareInterventionReportRepository $sirr): Response
+    public function show(Request $request, Intervention $intervention, EntityManagerInterface $em, SoftwareRepository $sr, ActionRepository $ar, SoftwareInterventionReportRepository $sirr, BillingLineRepository $blr, DolibarrHelper $dolibarrHelper): Response
     {
         $this->em = $em;
         $theStatus = $intervention->getStatus();
@@ -120,11 +121,53 @@ class InterventionController extends AbstractController
                     break;
 
                     case "Terminée":
-                        if ( $intervention->getInterventionReport()->getStep() == 9 && $intervention->getReturnDate() ) {
+                        if ( $intervention->getInterventionReport()->getStep() == 9 && $intervention->getReturnDate() ) {                           
                             $intervention->setStatus($newStatus);
                             $this->em->persist($intervention);
                             $this->em->flush();
-                            return $this->redirectToRoute('index');
+                            // 1) Recherche/création du client dans Dolibarr
+                            $dolibarrClientId = $dolibarrHelper->getDolibarrClientId($intervention->getClient());
+                            if (isset($dolibarrClientId)) {
+                                 $this->addFlash('success', "L'ID du client '" . $intervention->getClient()->getLastName() . "' est : '" . $dolibarrClientId . "'");
+                                
+                                // 2) Recherche/création du (ou des) service(s) dans Dolibarr
+                                $dolibarrProductServiceId = null;
+                                $dolibarrLignesFacture = array();;
+                                foreach ($intervention->getTasks() as $task) {
+                                    $dolibarrProductServiceId = $dolibarrHelper->getDolibarrProductServiceId($task, 'service');
+                                    if (isset($dolibarrProductServiceId)) {
+                                        $dolibarrLignesFacture[$dolibarrProductServiceId] = $task;
+                                        $this->addFlash('success', "L'ID du service '" . $task->getTitle() . "' est : '" . $dolibarrClientId . "'");
+                                    } else {
+                                        $this->addFlash('error', "Une erreur est intervenue, le service '" . $task->getTitle() . "' n'a pas été trouvé/créé dans Dolibarr.");
+                                    }
+                                }
+
+                                // Ajout de lignes dans la facture
+                                $billingLines = $blr->findAllByIntervention($intervention);
+                                $i = 0;
+                                foreach ($billingLines as $billingLine) {
+                                    $i--;
+                                    $dolibarrLignesFacture[$i] = $billingLine;
+                                }
+
+                                // 3) Création de la facture dans Dolibarr                                                
+                                if (sizeof($dolibarrLignesFacture) > 0) {
+                                    $this->addFlash('info', "Création de la facture dans Dolibarr...");
+                                    $dolibarrFactureId = $dolibarrHelper->getDolibarrFactureId($intervention, $dolibarrClientId, $dolibarrLignesFacture);
+                                    if (isset($dolibarrFactureId)) {
+                                        $this->addFlash('success', "La facture (PROV" . $dolibarrFactureId . ") a été créée dans Dolibarr.");
+                                    } else {
+                                        $this->addFlash('error', "Une erreur est intervenue lors de la création de la facture dans Dolibarr.");
+                                    }
+                                }
+
+                            } else {
+                                $this->addFlash('error', "Une erreur est intervenue, le client '" . $intervention->getClient()->getLastName() . "' n'a pas été trouvé/créé dans Dolibarr.");
+                            }
+
+                            // @todo à remettre
+                            return $this->redirectToRoute('index');                        
                         }
                         break;
                 }
