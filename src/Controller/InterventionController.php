@@ -79,7 +79,7 @@ class InterventionController extends AbstractController
             $intervention->setTotalPrice($totalPrice);
             $this->em->persist($intervention);
 
-            dump($intervention);
+            //dump($intervention);
 
             $this->em->flush();
 
