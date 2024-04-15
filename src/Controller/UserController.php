@@ -39,7 +39,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Encodez le mot de passe avant de le définir
-            $encodedPassword = $passwordEncoder->encodePassword($user, $user->getPassword());
+            $encodedPassword = $passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData());
             $user->setPassword($encodedPassword);
 
             // Persistez l'utilisateur dans la base de données
