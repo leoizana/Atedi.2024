@@ -161,7 +161,7 @@ class DolibarrHelper
                 $price_ttc = round($product->getPrice(), 2);
                 $tva_tx = $this->TAUX_TVA;
                 
-                $this->flashBag->add('info', "ref = '" . $ref . "' label = '" . 'Intervention - ' . $product_name . "' type = '" . $type  . "' price = '" . $price . "' price_ttc = '" . $price_ttc . "' tva_tx = '" . $tva_tx . "' ");
+                $this->flashBag->add('info', "ref = '" . $ref . "' label = '" . 'Intervention - ' . $product_name . "' type = '" . $type  . "' price = '" . $price . "' price_ttc = '" . $price_ttc . "' tva_tx = '" . $tva_tx . "' " . "' barcode = '" . $barcode . "' ");
                 $response = $this->httpClient->request('POST', $this->DOLIBARR_URL . 'api/index.php/products?DOLAPIKEY=' . $this->DOLIBARR_APIKEY, [
                     'body' => [
                         'ref' => $ref,
