@@ -35,7 +35,7 @@ class DolibarrHelper
 
         $this->TAUX_TVA = $params->get('TAUX_TVA');
 
-        // $this->flashBag = $flashBag;
+        /// $this->flashBag = $flashBag;
     }
 
     public function getDolibarrClientId($client)
@@ -46,7 +46,7 @@ class DolibarrHelper
             $client_name = trim($client->getFirstName() . ' ' . $client->getLastName());
 
             $action = 'la recherche du client dans Dolibarr';
-            // $this->flashBag->add('info', "Recherche du client '" . $client_name . "' dans Dolibarr...");
+            /// $this->flashBag->add('info', "Recherche du client '" . $client_name . "' dans Dolibarr...");
 
             // Exécuter la requête
             $response = $this->httpClient->request('GET', $this->DOLIBARR_URL . 'api/index.php/thirdparties?DOLAPIKEY=' . $this->DOLIBARR_APIKEY . '&sqlfilters=t.nom:=:\'' . $client_name . '\'&limit=1');
@@ -58,22 +58,22 @@ class DolibarrHelper
 
                 // Afficher l'entête de la réponse
                 $contentType = $response->getHeaders()['content-type'][0];
-                // $this->flashBag->add('info', $contentType);
+                /// $this->flashBag->add('info', $contentType);
 
                 // Afficher le contenu JSON de la réponse
                 $content = $response->getContent();
-                // $this->flashBag->add('info', $content);
+                /* /// $this->flashBag->add('info', $content); */
 
                 // Afficher le contenu OBJET de la réponse
                 $content_decode = json_decode($content);
-                // $this->flashBag->add('info', print_r($content_decode, true));
+                /* /// $this->flashBag->add('info', print_r($content_decode, true)); */
 
                 // ID du client
                 $dolibarrClientId = $content_decode[0]->id;
-                // $this->flashBag->add('info', "ID du client = " . $dolibarrClientId);
+                /// $this->flashBag->add('info', "ID du client = " . $dolibarrClientId);
             } else {
                 $action = 'la création du client dans Dolibarr';
-                // $this->flashBag->add('info', "Le client '" . $client_name . "' n'a pas trouvé, ajout du client dans Dolibarr...");
+                /// $this->flashBag->add('info', "Le client '" . $client_name . "' n'a pas trouvé, ajout du client dans Dolibarr...");
 
                 $response = $this->httpClient->request('POST', $this->DOLIBARR_URL . 'api/index.php/thirdparties?DOLAPIKEY=' . $this->DOLIBARR_APIKEY, [
                     'body' => [
@@ -91,18 +91,18 @@ class DolibarrHelper
 
                 // Afficher le code de retour
                 $statusCode = $response->getStatusCode();
-                // $this->flashBag->add('info', $statusCode);
+                /// $this->flashBag->add('info', $statusCode);
 
                 // Afficher l'entête de la réponse
                 $contentType = $response->getHeaders()['content-type'][0];
-                // $this->flashBag->add('info', $contentType);
+                /// $this->flashBag->add('info', $contentType);
 
                 // Afficher le contenu JSON de la réponse
                 $dolibarrClientId = $response->getContent();
-                // $this->flashBag->add('info', "ID du client qui vient d'être créé : " . $dolibarrClientId);
+                /// $this->flashBag->add('info', "ID du client qui vient d'être créé : " . $dolibarrClientId);
             }
         } catch (\Throwable $th) {
-            // $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action . ' : ' . $th->getMessage());
+            /// $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action . ' : ' . $th->getMessage());
         }
 
         return $dolibarrClientId;
@@ -122,7 +122,7 @@ class DolibarrHelper
             $product_name = $product->getTitle();
 
             $action = 'la recherche de la tâche dans Dolibarr';
-            // $this->flashBag->add('info', "Recherche du product '" . $product_name . "' dans Dolibarr...");
+            /// $this->flashBag->add('info', "Recherche du product '" . $product_name . "' dans Dolibarr...");
 
             // Exécuter la requête
             $response = $this->httpClient->request('GET', $this->DOLIBARR_URL . 'api/index.php/products?DOLAPIKEY=' . $this->DOLIBARR_APIKEY . '&sqlfilters=t.label:=:\'' . 'Intervention - ' . $product_name . '\'&limit=1');
@@ -137,58 +137,62 @@ class DolibarrHelper
 
                 // Afficher l'entête de la réponse
                 $contentType = $response->getHeaders()['content-type'][0];
-                // $this->flashBag->add('info', $contentType);
+                /// $this->flashBag->add('info', $contentType);
 
                 // Afficher le contenu JSON de la réponse
                 $content = $response->getContent();
-                // $this->flashBag->add('info', $content);
+                /// $this->flashBag->add('info', $content);
 
                 // Afficher le contenu OBJET de la réponse
                 $content_decode = json_decode($content);
-                // $this->flashBag->add('info', print_r($content_decode, true));
+                /// $this->flashBag->add('info', print_r($content_decode, true));
 
                 // ID du product                
                     $dolibarrProductId = $content_decode[0]->id;
-                    // $this->flashBag->add('info', "ID du product = " . $dolibarrProductId);
+                    /// $this->flashBag->add('info', "ID du product = " . $dolibarrProductId);
             } else {
                 $action = 'la création de la tâche dans Dolibarr';
-                // $this->flashBag->add('info', "Le product '" . $product_name . "' n'a pas trouvé, ajout du product dans Dolibarr...");
+                /// $this->flashBag->add('info', "Le product '" . $product_name . "' n'a pas trouvé, ajout du product dans Dolibarr...");
 
-
+                $ref = 'ATEDI-' . str_pad($product->getId(), 3, "0", STR_PAD_LEFT);
+                $barcode = '999' . str_pad($product->getId(), 10, "0", STR_PAD_LEFT);
                 $price = ($product->getPrice() / (1 + ($this->TAUX_TVA / 100)));
                 $price_ttc = $product->getPrice();
                 $tva_tx = $this->TAUX_TVA;
-                // $this->flashBag->add('info', "product_name = '" . $product_name
-                    // . "' price = '" . $price
-                    // . "' price_ttc = '" . $price_ttc
-                    // . "' tva_tx = '" . $tva_tx . "' ");
+                
+                /// $this->flashBag->add('info', "ref = '" . $ref . "' label = '" . 'Intervention - ' . $product_name . "' type = '" . $type  . "' price = '" . $price . "' price_ttc = '" . $price_ttc . "' tva_tx = '" . $tva_tx . "' ");
                 $response = $this->httpClient->request('POST', $this->DOLIBARR_URL . 'api/index.php/products?DOLAPIKEY=' . $this->DOLIBARR_APIKEY, [
                     'body' => [
-                        'ref' => 'ATEDI-' . str_pad($product->getId(), 3, "0", STR_PAD_LEFT),
+                        'ref' => $ref,
                         'label' => 'Intervention - ' . $product_name,
+                        'description' => 'Intervention - ' . $product_name,
                         'type' => $type,
                         'price' => $price,
                         'price_ttc' => $price_ttc,
-                        'price_base_type' => 'HT',
+                        'price_base_type' => 'TTC',
+                        'pmp' => $price_ttc,
                         'tva_tx' => $tva_tx,
                         'status' => 1, //tosell
+                        'status_buy' => 1,
+                        'barcode_type' => 2,
+                        'barcode' => $barcode, //9662247182140
                     ],
                 ]);
 
                 // Afficher le code de retour
                 $statusCode = $response->getStatusCode();
-                // $this->flashBag->add('info', $statusCode);
+                /// $this->flashBag->add('info', $statusCode);
 
                 // Afficher l'entête de la réponse
                 $contentType = $response->getHeaders()['content-type'][0];
-                // $this->flashBag->add('info', $contentType);
+                /// $this->flashBag->add('info', $contentType);
 
                 // Afficher le contenu JSON de la réponse
                 $dolibarrProductId = $response->getContent();
-                // $this->flashBag->add('info', "ID du product qui vient d'être créé : " . $dolibarrProductId);
+                /// $this->flashBag->add('info', "ID du product qui vient d'être créé : " . $dolibarrProductId);
             }
         } catch (\Throwable $th) {
-            // $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action . ' : ' . $th->getMessage());
+            /// $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action . ' : ' . $th->getMessage());
         }
 
         return $dolibarrProductId;
@@ -240,18 +244,18 @@ class DolibarrHelper
 
             // Afficher le code de retour
             $statusCode = $response->getStatusCode();
-            // $this->flashBag->add('info', $statusCode);
+            /// $this->flashBag->add('info', $statusCode);
 
             // Afficher l'entête de la réponse
             $contentType = $response->getHeaders()['content-type'][0];
-            // // $this->flashBag->add('info', $contentType);
+            // /// $this->flashBag->add('info', $contentType);
 
             // Afficher le contenu JSON de la réponse
             $dolibarrFactureId = $response->getContent();
-            // // $this->flashBag->add('info', "ID du product qui vient d'être créé : " . $dolibarrProductId);
+            // /// $this->flashBag->add('info', "ID du product qui vient d'être créé : " . $dolibarrProductId);
 
         } catch (\Throwable $th) {
-            // $this->flashBag->add('error', 'Une erreur est intervenue lors de la création de la facture dans Dolibarr : ' . $th->getMessage());
+            /// $this->flashBag->add('error', 'Une erreur est intervenue lors de la création de la facture dans Dolibarr : ' . $th->getMessage());
         }
 
         return $dolibarrFactureId;
