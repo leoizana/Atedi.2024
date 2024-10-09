@@ -156,8 +156,8 @@ class DolibarrHelper
 
                 $ref = 'ATEDI-' . str_pad($product->getId(), 3, "0", STR_PAD_LEFT);
                 $barcode = '999' . str_pad($product->getId(), 10, "0", STR_PAD_LEFT);
-                $price = ($product->getPrice() / (1 + ($this->TAUX_TVA / 100)));
-                $price_ttc = $product->getPrice();
+                $price = round(($product->getPrice() / (1 + ($this->TAUX_TVA / 100))), 2);
+                $price_ttc = round($product->getPrice(), 2);
                 $tva_tx = $this->TAUX_TVA;
                 
                 $this->flashBag->add('info', "ref = '" . $ref . "' label = '" . 'Intervention - ' . $product_name . "' type = '" . $type  . "' price = '" . $price . "' price_ttc = '" . $price_ttc . "' tva_tx = '" . $tva_tx . "' ");
@@ -167,10 +167,10 @@ class DolibarrHelper
                         'label' => 'Intervention - ' . $product_name,
                         'description' => 'Intervention - ' . $product_name,
                         'type' => $type,
-                        'price' => round($price, 2),
-                        'price_ttc' => round($price_ttc, 2),
+                        'price' => $price,
+                        'price_ttc' => $price_ttc,
                         'price_base_type' => 'TTC',
-                        'pmp' => round($price_ttc, 2),
+                        'pmp' => $price_ttc,
                         'tva_tx' => $tva_tx,
                         'status' => 1, //tosell
                         'status_buy' => 1,
