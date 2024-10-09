@@ -29,11 +29,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/intervention')]
 class InterventionController extends AbstractController
 {
-    private $AtediHelper;
+    private $atediHelper;
 
-    public function __construct(AtediHelper $AtediHelper)
+    public function __construct(AtediHelper $atediHelper)
     {
-        $this->atediHelper = $AtediHelper;
+        $this->atediHelper = $atediHelper;
     }
 
     #[Route("/", name: "intervention_index", methods: ["GET"])]
