@@ -167,10 +167,10 @@ class DolibarrHelper
                         'label' => 'Intervention - ' . $product_name,
                         'description' => 'Intervention - ' . $product_name,
                         'type' => $type,
-                        'price' => $price,
-                        'price_ttc' => $price_ttc,
+                        'price' => round($price, 2),
+                        'price_ttc' => round($price_ttc, 2),
                         'price_base_type' => 'TTC',
-                        'pmp' => $price_ttc,
+                        'pmp' => round($price_ttc, 2),
                         'tva_tx' => $tva_tx,
                         'status' => 1, //tosell
                         'status_buy' => 1,
