@@ -102,7 +102,8 @@ class DolibarrHelper
                 $this->flashBag->add('info', "ID du client qui vient d'être créé : " . $dolibarrClientId);
             }
         } catch (\Throwable $th) {
-            $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action . ' : ' . $th->getMessage());
+            // $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action . ' : ' . $th->getMessage());
+            $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action);
         }
 
         return $dolibarrClientId;
@@ -192,7 +193,8 @@ class DolibarrHelper
                 $this->flashBag->add('info', "ID du product qui vient d'être créé : " . $dolibarrProductId);
             }
         } catch (\Throwable $th) {
-            $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action . ' : ' . $th->getMessage());
+            // $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action . ' : ' . $th->getMessage());
+            $this->flashBag->add('error', 'Une erreur est intervenue lors de ' . $action);
         }
 
         return $dolibarrProductId;
@@ -255,7 +257,8 @@ class DolibarrHelper
             // $this->flashBag->add('info', "ID du product qui vient d'être créé : " . $dolibarrProductId);
 
         } catch (\Throwable $th) {
-            $this->flashBag->add('error', 'Une erreur est intervenue lors de la création de la facture dans Dolibarr : ' . $th->getMessage());
+            // $this->flashBag->add('error', 'Une erreur est intervenue lors de la création de la facture dans Dolibarr : ' . $th->getMessage());
+            $this->flashBag->add('error', 'Une erreur est intervenue lors de la création de la facture dans Dolibarr');
         }
 
         return $dolibarrFactureId;
