@@ -58,7 +58,7 @@ class DolibarrHelper
 
                 // Afficher l'entête de la réponse
                 $contentType = $response->getHeaders()['content-type'][0];
-                $this->flashBag->add('info', $contentType);
+                /* $this->flashBag->add('info', $contentType); */
 
                 // Afficher le contenu JSON de la réponse
                 $content = $response->getContent();
@@ -95,7 +95,7 @@ class DolibarrHelper
 
                 // Afficher l'entête de la réponse
                 $contentType = $response->getHeaders()['content-type'][0];
-                $this->flashBag->add('info', $contentType);
+                /* $this->flashBag->add('info', $contentType); */
 
                 // Afficher le contenu JSON de la réponse
                 $dolibarrClientId = $response->getContent();
@@ -138,7 +138,7 @@ class DolibarrHelper
 
                 // Afficher l'entête de la réponse
                 $contentType = $response->getHeaders()['content-type'][0];
-                $this->flashBag->add('info', $contentType);
+                /* $this->flashBag->add('info', $contentType); */
 
                 // Afficher le contenu JSON de la réponse
                 $content = $response->getContent();
@@ -161,7 +161,7 @@ class DolibarrHelper
                 $price_ttc = round($product->getPrice(), 2);
                 $tva_tx = $this->TAUX_TVA;
                 
-                $this->flashBag->add('info', "ref = '" . $ref . "' label = '" . 'Intervention - ' . $product_name . "' type = '" . $type  . "' price = '" . $price . "' price_ttc = '" . $price_ttc . "' tva_tx = '" . $tva_tx . "' " . "' barcode = '" . $barcode . "' ");
+                //// $this->flashBag->add('info', "ref = '" . $ref . "' label = '" . 'Intervention - ' . $product_name . "' type = '" . $type  . "' price = '" . $price . "' price_ttc = '" . $price_ttc . "' tva_tx = '" . $tva_tx . "' " . "' barcode = '" . $barcode . "' ");
                 $response = $this->httpClient->request('POST', $this->DOLIBARR_URL . 'api/index.php/products?DOLAPIKEY=' . $this->DOLIBARR_APIKEY, [
                     'body' => [
                         'ref' => $ref,
@@ -186,7 +186,7 @@ class DolibarrHelper
 
                 // Afficher l'entête de la réponse
                 $contentType = $response->getHeaders()['content-type'][0];
-                $this->flashBag->add('info', $contentType);
+                /* $this->flashBag->add('info', $contentType); */
 
                 // Afficher le contenu JSON de la réponse
                 $dolibarrProductId = $response->getContent();
@@ -250,7 +250,7 @@ class DolibarrHelper
 
             // Afficher l'entête de la réponse
             $contentType = $response->getHeaders()['content-type'][0];
-            // $this->flashBag->add('info', $contentType);
+            // /* $this->flashBag->add('info', $contentType); */
 
             // Afficher le contenu JSON de la réponse
             $dolibarrFactureId = $response->getContent();
