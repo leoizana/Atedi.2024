@@ -9,7 +9,6 @@ use App\Entity\Client;
 use DateTimeInterface;
 use App\Entity\Equipment;
 use App\Entity\BillingLine;
-use Doctrine\DBAL\Types\Types;
 use App\Entity\OperatingSystem;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\InterventionReport;
