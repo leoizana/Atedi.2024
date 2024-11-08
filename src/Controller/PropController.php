@@ -11,21 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-<<<<<<< HEAD
-/**
- * @Route("/prop")
- */
-class PropController extends AbstractController
-{
-    /**
-     * @Route("/", name="prop_index", methods={"GET"})
-     */
-=======
 #[Route('/prop')]
 class PropController extends AbstractController
 {
     #[Route("/", name: "prop_index", methods: ["GET"])]
->>>>>>> origin/production
     public function index(PropRepository $propRepository): Response
     {
         return $this->render('prop/index.html.twig', [
@@ -33,13 +22,7 @@ class PropController extends AbstractController
         ]);
     }
 
-<<<<<<< HEAD
-    /**
-     * @Route("/new", name="prop_new", methods={"GET","POST"})
-     */
-=======
     #[Route("/new", name: "prop_new", methods: ["GET","POST"])]
->>>>>>> origin/production
     public function new(Request $request): Response
     {
         $prop = new Prop();
@@ -66,13 +49,7 @@ class PropController extends AbstractController
         ]);
     }
 
-<<<<<<< HEAD
-    /**
-     * @Route("/{id}", name="prop_show", methods={"GET"})
-     */
-=======
     #[Route("/{id}", name: "prop_show", methods: ["GET"])]
->>>>>>> origin/production
     public function show(Prop $prop, InterventionRepository $interventionRepository): Response
     {
         $interventions = $interventionRepository->findAllByProp($prop->getId());
@@ -83,13 +60,7 @@ class PropController extends AbstractController
         ]);
     }
 
-<<<<<<< HEAD
-    /**
-     * @Route("/{id}/edit", name="prop_edit", methods={"GET","POST"})
-     */
-=======
     #[Route("/{id}/edit", name: "prop_edit", methods: ["GET","POST"])]
->>>>>>> origin/production
     public function edit(Request $request, Prop $prop): Response
     {
         $form = $this->createForm(PropType::class, $prop);
@@ -109,13 +80,7 @@ class PropController extends AbstractController
         ]);
     }
 
-<<<<<<< HEAD
-    /**
-     * @Route("/{id}", name="prop_delete", methods={"DELETE"})
-     */
-=======
     #[Route("/{id}", name: "prop_delete", methods: ["DELETE"])]
->>>>>>> origin/production
     public function delete(Request $request, Prop $prop): Response
     {
         if ($this->isCsrfTokenValid('delete'.$prop->getId(), $request->request->get('_token'))) {
